@@ -8,10 +8,11 @@ import discord4j.core.object.entity.channel.GuildMessageChannel;
 
 public class DiscordIntegration {
     public static GatewayDiscordClient gateway;
+    public static Snowflake webhookId = Snowflake.of(L);
 
     public static void connect() {
         try {
-            gateway = DiscordClientBuilder.create("please paste token manually").build()
+            gateway = DiscordClientBuilder.create("").build()
                     .login()
                     .block();
         } catch (Exception e) {
@@ -24,5 +25,11 @@ public class DiscordIntegration {
                 .ofType(GuildMessageChannel.class)
                 .flatMap(channel -> channel.createMessage(message))
                 .subscribe();
+    }
+
+    public static void sendMessageWebhook(Snowflake webhookId, String message, String user) {
+        gateway.getWebhookById(webhookId).flatMap(webhook -> {
+           return webhook.execute().withContent(message).withUsername(user);
+        }).subscribe();
     }
 }

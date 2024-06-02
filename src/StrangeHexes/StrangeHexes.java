@@ -45,7 +45,8 @@ public class StrangeHexes extends Plugin{
         });
 
         Events.on(PlayerChatEvent.class, event -> {
-            sendMessage(channel, event.player.name + ": `" + event.message.replace("`", "") + "`");
+            if (event.message.startsWith("/")) {return;}
+            sendMessageWebhook(webhookId, "`" + event.message.replace("`", "") + " `", event.player.name);
         });
 
         //add a chat filter that changes the contents of all messages
