@@ -2,6 +2,10 @@ package StrangeHexes;
 
 import arc.*;
 import arc.util.*;
+import discord4j.common.util.Snowflake;
+import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.Message;
+import discord4j.discordjson.json.MessageCreateRequest;
 import mindustry.*;
 import mindustry.content.*;
 import mindustry.game.EventType.*;
@@ -9,12 +13,26 @@ import mindustry.gen.*;
 import mindustry.mod.*;
 import mindustry.net.Administration.*;
 import mindustry.world.blocks.storage.*;
+import reactor.core.publisher.Mono;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static StrangeHexes.DiscordIntegration.*;
 
 public class StrangeHexes extends Plugin{
+    public static long channel = 1246806416271081502L;
 
     //called when game initializes
     @Override
     public void init(){
+        DiscordIntegration.connect();
+        try {
+            Log.info(Files.readAllLines(Paths.get("token.txt")).get(0));
+        } catch (IOException e) {
+            Log.err(e);
+        }
         //listen for a block selection event
         Events.on(BuildSelectEvent.class, event -> {
             if(!event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer()){
@@ -27,7 +45,7 @@ public class StrangeHexes extends Plugin{
         });
 
         Events.on(PlayerChatEvent.class, event -> {
-            Log.info(event.message);
+            sendMessage(channel, event.player.name + ": `" + event.message.replace("`", "") + "`");
         });
 
         //add a chat filter that changes the contents of all messages
@@ -43,6 +61,17 @@ public class StrangeHexes extends Plugin{
             }
             return true;
         });
+
+        gateway.on(MessageCreateEvent.class, event -> {
+            Message message = event.getMessage();
+            if (message.getChannelId().asLong() == channel &&
+                    message.getUserData().id().asLong() != gateway.getSelfId().asLong()) {
+                message.getAuthorAsMember().subscribe(member -> {
+                    Call.sendMessage(member.getDisplayName() + ": " + message.getContent());
+                });
+            }
+            return Mono.empty();
+        }).subscribe();
     }
 
     //register commands that run on the server
