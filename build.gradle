@@ -31,10 +31,13 @@ allprojects{
 dependencies{
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+    //implementation "com.discord4j:discord4j-core:3.2.6"
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
 }
 
 jar{
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     archiveFileName = "${project.archivesBaseName}.jar"
     from{
         configurations.runtimeClasspath.collect{it.isDirectory() ? it : zipTree(it)}

@@ -1,4 +1,4 @@
-package example;
+package StrangeHexes;
 
 import arc.*;
 import arc.util.*;
@@ -10,7 +10,7 @@ import mindustry.mod.*;
 import mindustry.net.Administration.*;
 import mindustry.world.blocks.storage.*;
 
-public class ExamplePlugin extends Plugin{
+public class StrangeHexes extends Plugin{
 
     //called when game initializes
     @Override
@@ -24,6 +24,10 @@ public class ExamplePlugin extends Plugin{
                 //send a message to everyone saying that this player has begun building a reactor
                 Call.sendMessage("[scarlet]ALERT![] " + player.name + " has begun building a reactor at " + event.tile.x + ", " + event.tile.y);
             }
+        });
+
+        Events.on(PlayerChatEvent.class, event -> {
+            Log.info(event.message);
         });
 
         //add a chat filter that changes the contents of all messages
