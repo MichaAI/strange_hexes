@@ -105,7 +105,6 @@ public class StrangeHexes extends Plugin{
                         String userId = matcher.group(1);
                         User user = gateway.getUserById(Snowflake.of(userId)).block(); // Использование .block() здесь
                         String username = user.getUsername();
-                        Log.info(username);
                         content = content.replace(matcher.group(1), username);
                     }
                     Call.sendMessage("[olive][ [#7289da]DISCORD []][] " + member.getDisplayName() + ": " + content);
