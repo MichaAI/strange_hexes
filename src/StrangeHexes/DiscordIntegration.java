@@ -42,7 +42,7 @@ public class DiscordIntegration {
             return webhook.execute()
                     .withEmbeds(embed)
                     .withUsername(webhookUsername)
-                    .withAvatarUrl("https://skillbox.ru/upload/setka_images/08434114042023_08fda0244b5397e030ee401fd2bea5b24f78a72b.jpg"); // TODO поменяй эту хуйню долбоеб
+                    .withAvatarUrl("https://w7.pngwing.com/pngs/164/999/png-transparent-drawing-samsung-galaxy-s-computer-servers-productivity-database-big-data-purple-text-service.png"); // TODO поменяй эту хуйню долбоеб
         }).subscribe();
     }
 }

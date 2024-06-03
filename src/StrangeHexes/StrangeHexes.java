@@ -78,6 +78,7 @@ public class StrangeHexes extends Plugin{
                             .build());
         });
 
+
         //add a chat filter that changes the contents of all messages
         //in this case, all instances of "heck" are censored
         Vars.netServer.admins.addChatFilter((player, text) -> text.replace("heck", "h*ck"));
@@ -104,10 +105,11 @@ public class StrangeHexes extends Plugin{
                     while (matcher.find()) {
                         String userId = matcher.group(1);
                         User user = gateway.getUserById(Snowflake.of(userId)).block(); // Использование .block() здесь
+
                         String username = user.getUsername();
-                        content = content.replace(matcher.group(1), username);
+                        content = content.replace("<@" + matcher.group(1) + ">", "[olive][ [white]@" + username + " [] ][]");
                     }
-                    Call.sendMessage("[olive][ [#7289da]DISCORD []][] " + member.getDisplayName() + ": " + content);
+                    Call.sendMessage("[olive][ [#7289da]"+Iconc.discord+" DISCORD []][] " + member.getDisplayName() + ": " + content);
                 }); //TODO понять что за хуйню я только что написал
             }
             return Mono.empty();
