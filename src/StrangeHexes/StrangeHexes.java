@@ -3,9 +3,12 @@ package StrangeHexes;
 import arc.*;
 import arc.util.*;
 import discord4j.common.util.Snowflake;
+import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Message;
-import discord4j.discordjson.json.MessageCreateRequest;
+import discord4j.core.object.entity.User;
+import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.rest.util.Color;
 import mindustry.*;
 import mindustry.content.*;
 import mindustry.game.EventType.*;
@@ -15,9 +18,8 @@ import mindustry.net.Administration.*;
 import mindustry.world.blocks.storage.*;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static StrangeHexes.DiscordIntegration.*;
 
@@ -28,11 +30,7 @@ public class StrangeHexes extends Plugin{
     @Override
     public void init(){
         DiscordIntegration.connect();
-        try {
-            Log.info(Files.readAllLines(Paths.get("token.txt")).get(0));
-        } catch (IOException e) {
-            Log.err(e);
-        }
+
         //listen for a block selection event
         Events.on(BuildSelectEvent.class, event -> {
             if(!event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer()){
@@ -46,7 +44,38 @@ public class StrangeHexes extends Plugin{
 
         Events.on(PlayerChatEvent.class, event -> {
             if (event.message.startsWith("/")) {return;}
-            sendMessageWebhook(webhookId, "`" + event.message.replace("`", "") + " `", event.player.name);
+            sendMessageWebhook(webhookId, "`" + event.message
+                            .replace("`", "")
+                            .replaceAll("\\[.*?\\]", "") + " `",
+                    event.player.name
+                            .replaceAll("\\[.*?\\]", ""));
+        });
+
+        Events.on(PlayerConnect.class, event -> {
+            sendMessageWebhookWithEmbed(webhookId, "Server",
+                    EmbedCreateSpec.builder()
+                            .color(Color.GREEN)
+                            .description("`" + event.player.name
+                                    .replace("`", "")
+                                    .replaceAll("\\[.*?\\]", "") + "` join to server.")
+                            .build());
+        });
+
+        Events.on(PlayerLeave.class, event -> {
+            sendMessageWebhookWithEmbed(webhookId, "Server",
+                    EmbedCreateSpec.builder()
+                            .color(Color.RUBY)
+                            .description("`" + event.player.name
+                                    .replace("`", "").replaceAll("\\[.*?\\]", "") + "` left from server.")
+                            .build());
+        });
+
+        Events.on(ServerLoadEvent.class, event -> {
+            sendMessageWebhookWithEmbed(webhookId, "Server",
+                    EmbedCreateSpec.builder()
+                            .color(Color.CYAN)
+                            .description("Server Started!")
+                            .build());
         });
 
         //add a chat filter that changes the contents of all messages
@@ -65,11 +94,22 @@ public class StrangeHexes extends Plugin{
 
         gateway.on(MessageCreateEvent.class, event -> {
             Message message = event.getMessage();
-            if (message.getChannelId().asLong() == channel &&
-                    message.getUserData().id().asLong() != gateway.getSelfId().asLong()) {
+            if (message.getChannelId().asLong() == channel) {
                 message.getAuthorAsMember().subscribe(member -> {
-                    Call.sendMessage(member.getDisplayName() + ": " + message.getContent());
-                });
+
+                    String content = message.getContent();
+                    Pattern pattern = Pattern.compile("<@(!?\\d+)>");
+                    Matcher matcher = pattern.matcher(content);
+
+                    while (matcher.find()) {
+                        String userId = matcher.group(1);
+                        User user = gateway.getUserById(Snowflake.of(userId)).block(); // Использование .block() здесь
+                        String username = user.getUsername();
+                        Log.info(username);
+                        content = content.replace(matcher.group(1), username);
+                    }
+                    Call.sendMessage("[olive][ [#7289da]DISCORD []][] " + member.getDisplayName() + ": " + content);
+                }); //TODO понять что за хуйню я только что написал
             }
             return Mono.empty();
         }).subscribe();
@@ -101,7 +141,7 @@ public class StrangeHexes extends Plugin{
         });
 
         //register a whisper command which can be used to send other players messages
-        handler.<Player>register("whisper", "<player> <text...>", "Whisper text to another player.", (args, player) -> {
+        handler.<Player>register("w", "<player> <text...>", "Whisper text to another player.", (args, player) -> {
             //find player by name
             Player other = Groups.player.find(p -> p.name.equalsIgnoreCase(args[0]));
 

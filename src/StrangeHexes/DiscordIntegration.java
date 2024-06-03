@@ -5,6 +5,7 @@ import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
+import discord4j.core.spec.EmbedCreateSpec;
 
 public class DiscordIntegration {
     public static GatewayDiscordClient gateway;
@@ -20,16 +21,28 @@ public class DiscordIntegration {
         }
     }
 
-    public static void sendMessage(long channelId, String message) {
-        gateway.getChannelById(Snowflake.of(channelId))
-                .ofType(GuildMessageChannel.class)
-                .flatMap(channel -> channel.createMessage(message))
-                .subscribe();
+    //public static void sendMessage(long channelId, String message) {
+    //    gateway.getChannelById(Snowflake.of(channelId))
+    //            .ofType(GuildMessageChannel.class)
+    //            .flatMap(channel -> channel.createMessage(message))
+    //            .subscribe();
+    //}
+
+    public static void sendMessageWebhook(Snowflake webhookId, String message, String webhookUsername) {
+        gateway.getWebhookById(webhookId).flatMap(webhook -> {
+           return webhook.execute()
+                   .withContent(message)
+                   .withUsername(webhookUsername)
+                   .withAvatarUrl("https://github.com/Anuken/Mindustry/blob/master/core/assets/sprites/error.png?raw=true"); //TODO change this please
+        }).subscribe();
     }
 
-    public static void sendMessageWebhook(Snowflake webhookId, String message, String user) {
+    public static void sendMessageWebhookWithEmbed(Snowflake webhookId, String webhookUsername, EmbedCreateSpec embed) {
         gateway.getWebhookById(webhookId).flatMap(webhook -> {
-           return webhook.execute().withContent(message).withUsername(user);
+            return webhook.execute()
+                    .withEmbeds(embed)
+                    .withUsername(webhookUsername)
+                    .withAvatarUrl("https://skillbox.ru/upload/setka_images/08434114042023_08fda0244b5397e030ee401fd2bea5b24f78a72b.jpg"); // TODO поменяй эту хуйню долбоеб
         }).subscribe();
     }
 }
