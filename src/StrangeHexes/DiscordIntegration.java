@@ -9,11 +9,12 @@ import discord4j.core.spec.EmbedCreateSpec;
 
 public class DiscordIntegration {
     public static GatewayDiscordClient gateway;
-    public static Snowflake webhookId = Snowflake.of(L);
+    public static Snowflake webhookId = Snowflake.of(ConfigLoader.config.getString("webhook_id"));
 
     public static void connect() {
         try {
-            gateway = DiscordClientBuilder.create("").build()
+            gateway = DiscordClientBuilder.create(ConfigLoader.config.getString("token"))
+                    .build()
                     .login()
                     .block();
         } catch (Exception e) {
@@ -30,10 +31,10 @@ public class DiscordIntegration {
 
     public static void sendMessageWebhook(Snowflake webhookId, String message, String webhookUsername) {
         gateway.getWebhookById(webhookId).flatMap(webhook -> {
-           return webhook.execute()
-                   .withContent(message)
-                   .withUsername(webhookUsername)
-                   .withAvatarUrl("https://github.com/Anuken/Mindustry/blob/master/core/assets/sprites/error.png?raw=true"); //TODO change this please
+            return webhook.execute()
+                    .withContent(message)
+                    .withUsername(webhookUsername)
+                    .withAvatarUrl("https://github.com/Anuken/Mindustry/blob/master/core/assets/sprites/error.png?raw=true"); //TODO change this please
         }).subscribe();
     }
 

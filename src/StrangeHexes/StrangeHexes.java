@@ -3,7 +3,6 @@ package StrangeHexes;
 import arc.*;
 import arc.util.*;
 import discord4j.common.util.Snowflake;
-import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
@@ -23,17 +22,19 @@ import java.util.regex.Pattern;
 
 import static StrangeHexes.DiscordIntegration.*;
 
-public class StrangeHexes extends Plugin{
+public class StrangeHexes extends Plugin {
     public static long channel = 1246806416271081502L;
+    public static final String[] username = {"a"};
 
     //called when game initializes
     @Override
-    public void init(){
+    public void init() {
+        ConfigLoader.load(); //Должен загрузится первым
         DiscordIntegration.connect();
 
         //listen for a block selection event
         Events.on(BuildSelectEvent.class, event -> {
-            if(!event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer()){
+            if (!event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer()) {
                 //player is the unit controller
                 Player player = event.builder.getPlayer();
 
@@ -43,7 +44,9 @@ public class StrangeHexes extends Plugin{
         });
 
         Events.on(PlayerChatEvent.class, event -> {
-            if (event.message.startsWith("/")) {return;}
+            if (event.message.startsWith("/")) {
+                return;
+            }
             sendMessageWebhook(webhookId, "`" + event.message
                             .replace("`", "")
                             .replaceAll("\\[.*?\\]", "") + " `",
@@ -86,7 +89,7 @@ public class StrangeHexes extends Plugin{
         //add an action filter for preventing players from doing certain things
         Vars.netServer.admins.addActionFilter(action -> {
             //random example: prevent blast compound depositing
-            if(action.type == ActionType.depositItem && action.item == Items.blastCompound && action.tile.block() instanceof CoreBlock){
+            if (action.type == ActionType.depositItem && action.item == Items.blastCompound && action.tile.block() instanceof CoreBlock) {
                 action.player.sendMessage("Example action filter: Prevents players from depositing blast compound into the core.");
                 return false;
             }
@@ -97,19 +100,21 @@ public class StrangeHexes extends Plugin{
             Message message = event.getMessage();
             if (message.getChannelId().asLong() == channel) {
                 message.getAuthorAsMember().subscribe(member -> {
-
                     String content = message.getContent();
                     Pattern pattern = Pattern.compile("<@(!?\\d+)>");
                     Matcher matcher = pattern.matcher(content);
 
                     while (matcher.find()) {
                         String userId = matcher.group(1);
-                        User user = gateway.getUserById(Snowflake.of(userId)).block(); // Использование .block() здесь
+                        gateway.getUserById(Snowflake.of(userId)).subscribe(other -> {
+                            username[0] = other.getUsername();
+                        });
 
-                        String username = user.getUsername();
-                        content = content.replace("<@" + matcher.group(1) + ">", "[olive][ [white]@" + username + " [] ][]");
+                        Log.info(username[0]);
+                        content = content.replace("<@" + matcher.group(1) + ">", "[olive][ [white]@" + username[0] + " [] ][]");
                     }
-                    Call.sendMessage("[olive][ [#7289da]"+Iconc.discord+" DISCORD []][] " + member.getDisplayName() + ": " + content);
+
+                    Call.sendMessage("[olive][ [#7289da]" + Iconc.discord + " DISCORD []][] " + member.getDisplayName() + ": " + content);
                 }); //TODO понять что за хуйню я только что написал
             }
             return Mono.empty();
@@ -118,13 +123,13 @@ public class StrangeHexes extends Plugin{
 
     //register commands that run on the server
     @Override
-    public void registerServerCommands(CommandHandler handler){
+    public void registerServerCommands(CommandHandler handler) {
         handler.register("reactors", "List all thorium reactors in the map.", args -> {
-            for(int x = 0; x < Vars.world.width(); x++){
-                for(int y = 0; y < Vars.world.height(); y++){
+            for (int x = 0; x < Vars.world.width(); x++) {
+                for (int y = 0; y < Vars.world.height(); y++) {
                     //loop through and log all found reactors
                     //make sure to only log reactor centers
-                    if(Vars.world.tile(x, y).block() == Blocks.thoriumReactor && Vars.world.tile(x, y).isCenter()){
+                    if (Vars.world.tile(x, y).block() == Blocks.thoriumReactor && Vars.world.tile(x, y).isCenter()) {
                         Log.info("Reactor at @, @", x, y);
                     }
                 }
@@ -134,7 +139,7 @@ public class StrangeHexes extends Plugin{
 
     //register commands that player can invoke in-game
     @Override
-    public void registerClientCommands(CommandHandler handler){
+    public void registerClientCommands(CommandHandler handler) {
 
         //register a simple reply command
         handler.<Player>register("reply", "<text...>", "A simple ping command that echoes a player's text.", (args, player) -> {
@@ -147,13 +152,17 @@ public class StrangeHexes extends Plugin{
             Player other = Groups.player.find(p -> p.name.equalsIgnoreCase(args[0]));
 
             //give error message with scarlet-colored text if player isn't found
-            if(other == null){
+            if (other == null) {
                 player.sendMessage("[scarlet]No player by that name found!");
                 return;
             }
 
             //send the other player a message, using [lightgray] for gray text color and [] to reset color
             other.sendMessage("[lightgray](whisper) " + player.name + ":[] " + args[1]);
+        });
+
+        handler.<Player>register("discord", "", "Send link to discord server", (args, player) -> {
+            Call.openURI("https://discord.gg/vY8E35XgTg");
         });
     }
 }
