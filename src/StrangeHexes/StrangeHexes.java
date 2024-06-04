@@ -56,13 +56,13 @@ public class StrangeHexes extends Plugin {
             sendMessageWebhook(webhookId, "`" + Strings.stripColors(event.message.replace("`", "")) + " `",
                     Strings.stripColors(event.player.name.replace("`", "")),
                     "https://robohash.org/"
-                            + event.player.name + "?set=set3");
+                            + Strings.stripColors(event.player.name.replace("`", "") + "?set=set3"));
         });
 
         Events.on(PlayerConnect.class, event -> {
             sendMessageWebhookWithEmbed(webhookId, "Server",
                     EmbedCreateSpec.builder()
-                            .color(Color.GREEN)
+                            .color(Color.of(0xB2EC5D))
                             .author(Strings.stripColors(event.player.name.replace("`", ""))
                                     + " join to server.", "", "https://robohash.org/"
                                     + Strings.stripColors(event.player.name) + "?set=set3")
@@ -72,7 +72,7 @@ public class StrangeHexes extends Plugin {
         Events.on(PlayerLeave.class, event -> {
             sendMessageWebhookWithEmbed(webhookId, "Server",
                     EmbedCreateSpec.builder()
-                            .color(Color.RUBY)
+                            .color(Color.of(0xEB4C42))
                             .author(Strings.stripColors(event.player.name.replace("`", ""))
                             + " left from server.", "", "https://robohash.org/"
                             + Strings.stripColors(event.player.name) + "?set=set3")
@@ -82,7 +82,7 @@ public class StrangeHexes extends Plugin {
         Events.on(ServerLoadEvent.class, event -> {
             sendMessageWebhookWithEmbed(webhookId, "Server",
                     EmbedCreateSpec.builder()
-                            .color(Color.CYAN)
+                            .color(Color.of(0x0047AB))
                             .description("Server Started!")
                             .build());
         });
