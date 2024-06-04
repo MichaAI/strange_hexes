@@ -55,8 +55,10 @@ public class StrangeHexes extends Plugin {
             }
             sendMessageWebhook(webhookId, "`" + Strings.stripColors(event.message.replace("`", "")) + " `",
                     Strings.stripColors(event.player.name.replace("`", "")),
-                    "https://robohash.org/"
-                            + Strings.stripColors(event.player.name.replace("`", "") + "?set=set3"));
+                    "https://api.dicebear.com/8.x/shapes/png?seed="
+                            + Strings.stripColors(event.player.name.replace("`", ""))
+                            + "&shape1=ellipseFilled,polygonFilled,rectangleFilled,line,polygon,rectangle,ellipse&shape2=ellipseFilled,line,polygonFilled,rectangleFilled,rectangle,polygon,ellipse");
+            ;
         });
 
         Events.on(PlayerConnect.class, event -> {
@@ -74,8 +76,8 @@ public class StrangeHexes extends Plugin {
                     EmbedCreateSpec.builder()
                             .color(Color.of(0xEB4C42))
                             .author(Strings.stripColors(event.player.name.replace("`", ""))
-                            + " left from server.", "", "https://robohash.org/"
-                            + Strings.stripColors(event.player.name) + "?set=set3")
+                                    + " left from server.", "", "https://robohash.org/"
+                                    + Strings.stripColors(event.player.name) + "?set=set3")
                             .build());
         });
 
