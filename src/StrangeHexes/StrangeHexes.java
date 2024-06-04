@@ -1,21 +1,26 @@
 package StrangeHexes;
 
-import arc.*;
+import arc.Events;
 import arc.graphics.Colors;
-import arc.util.*;
+import arc.util.CommandHandler;
+import arc.util.Log;
+import arc.util.Strings;
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Message;
-import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
-import mindustry.*;
-import mindustry.content.*;
+import mindustry.Vars;
+import mindustry.content.Blocks;
+import mindustry.content.Items;
 import mindustry.game.EventType.*;
-import mindustry.gen.*;
-import mindustry.mod.*;
-import mindustry.net.Administration.*;
-import mindustry.world.blocks.storage.*;
+import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Iconc;
+import mindustry.gen.Player;
+import mindustry.mod.Plugin;
+import mindustry.net.Administration.ActionType;
+import mindustry.world.blocks.storage.CoreBlock;
 import reactor.core.publisher.Mono;
 
 import java.util.regex.Matcher;
@@ -24,9 +29,10 @@ import java.util.regex.Pattern;
 import static StrangeHexes.DiscordIntegration.*;
 
 public class StrangeHexes extends Plugin {
-    public static long channel = 1246806416271081502L;
     public static final String[] username = {"a"};
+    public static long channel = 1246806416271081502L;
     public static String colors = Colors.getColors().orderedKeys().toString("|"); // Представляет из мебя перечисление цветов для использование в regex (white|gray|...|)
+
     //called when game initializes
     @Override
     public void init() {
@@ -48,15 +54,18 @@ public class StrangeHexes extends Plugin {
                 return;
             }
             sendMessageWebhook(webhookId, "`" + Strings.stripColors(event.message.replace("`", "")) + " `",
-                    Strings.stripColors(event.player.name.replace("`", "")));
+                    Strings.stripColors(event.player.name.replace("`", "")),
+                    "https://robohash.org/"
+                            + event.player.name + "?set=set3");
         });
 
         Events.on(PlayerConnect.class, event -> {
             sendMessageWebhookWithEmbed(webhookId, "Server",
                     EmbedCreateSpec.builder()
                             .color(Color.GREEN)
-                            .description("`" + Strings.stripColors(event.player.name.replace("`", ""))
-                                    + "` join to server.")
+                            .author(Strings.stripColors(event.player.name.replace("`", ""))
+                                    + " join to server.", "", "https://robohash.org/"
+                                    + Strings.stripColors(event.player.name) + "?set=set3")
                             .build());
         });
 
@@ -64,7 +73,9 @@ public class StrangeHexes extends Plugin {
             sendMessageWebhookWithEmbed(webhookId, "Server",
                     EmbedCreateSpec.builder()
                             .color(Color.RUBY)
-                            .description("`" + Strings.stripColors(event.player.name.replace("`", "")) + "` left from server.")
+                            .author(Strings.stripColors(event.player.name.replace("`", ""))
+                            + " left from server.", "", "https://robohash.org/"
+                            + Strings.stripColors(event.player.name) + "?set=set3")
                             .build());
         });
 
@@ -95,6 +106,7 @@ public class StrangeHexes extends Plugin {
             Message message = event.getMessage();
             if (message.getChannelId().asLong() == channel) {
                 message.getAuthorAsMember().subscribe(member -> {
+                    if (member.isBot()) return;
                     String content = message.getContent();
                     Pattern pattern = Pattern.compile("<@(!?\\d+)>");
                     Matcher matcher = pattern.matcher(content);
@@ -104,11 +116,9 @@ public class StrangeHexes extends Plugin {
                         gateway.getUserById(Snowflake.of(userId)).subscribe(other -> {
                             username[0] = other.getUsername();
                         });
-
-                        Log.info(username[0]);
                         content = content.replace("<@" + matcher.group(1) + ">", "[olive][ [white]@" + username[0] + " [] ][]");
                     }
-
+                    Log.info("[ DISCORD ]" + member.getDisplayName() + ": " + content, Color.CYAN);
                     Call.sendMessage("[olive][ [#7289da]" + Iconc.discord + " DISCORD []][] " + member.getDisplayName() + ": " + content);
                 }); //TODO понять что за хуйню я только что написал
             }

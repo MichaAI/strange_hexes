@@ -29,12 +29,12 @@ public class DiscordIntegration {
     //            .subscribe();
     //}
 
-    public static void sendMessageWebhook(Snowflake webhookId, String message, String webhookUsername) {
+    public static void sendMessageWebhook(Snowflake webhookId, String message, String webhookUsername, String avatar_url) {
         gateway.getWebhookById(webhookId).flatMap(webhook -> {
             return webhook.execute()
                     .withContent(message)
                     .withUsername(webhookUsername)
-                    .withAvatarUrl("https://github.com/Anuken/Mindustry/blob/master/core/assets/sprites/error.png?raw=true"); //TODO change this please
+                    .withAvatarUrl(avatar_url); //TODO change this please
         }).subscribe();
     }
 
