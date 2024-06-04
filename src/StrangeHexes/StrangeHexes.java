@@ -1,6 +1,7 @@
 package StrangeHexes;
 
 import arc.*;
+import arc.graphics.Colors;
 import arc.util.*;
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.message.MessageCreateEvent;
@@ -25,7 +26,7 @@ import static StrangeHexes.DiscordIntegration.*;
 public class StrangeHexes extends Plugin {
     public static long channel = 1246806416271081502L;
     public static final String[] username = {"a"};
-
+    public static String colors = Colors.getColors().orderedKeys().toString("|");
     //called when game initializes
     @Override
     public void init() {
@@ -49,9 +50,13 @@ public class StrangeHexes extends Plugin {
             }
             sendMessageWebhook(webhookId, "`" + event.message
                             .replace("`", "")
-                            .replaceAll("\\[.*?\\]", "") + " `",
+                            .replaceAll("\\[\\b(" +
+                                    colors.toLowerCase() + colors.toUpperCase() +
+                                    "|#\\b[0-9a-fA-F]{6})\\b\\]", "") + " `",
                     event.player.name
-                            .replaceAll("\\[.*?\\]", ""));
+                            .replaceAll("\\[\\b(" +
+                                    colors.toLowerCase() + colors.toUpperCase() +
+                                    "|#\\b[0-9a-fA-F]{6})\\b\\]", ""));
         });
 
         Events.on(PlayerConnect.class, event -> {
@@ -60,7 +65,9 @@ public class StrangeHexes extends Plugin {
                             .color(Color.GREEN)
                             .description("`" + event.player.name
                                     .replace("`", "")
-                                    .replaceAll("\\[.*?\\]", "") + "` join to server.")
+                                    .replaceAll("\\[\\b(" +
+                                            colors.toLowerCase() + colors.toUpperCase() +
+                                            "|#\\b[0-9a-fA-F]{6})\\b\\]", ""))
                             .build());
         });
 
@@ -69,7 +76,10 @@ public class StrangeHexes extends Plugin {
                     EmbedCreateSpec.builder()
                             .color(Color.RUBY)
                             .description("`" + event.player.name
-                                    .replace("`", "").replaceAll("\\[.*?\\]", "") + "` left from server.")
+                                    .replace("`", "")
+                                    .replaceAll("\\[\\b(" +
+                                            colors.toLowerCase() + colors.toUpperCase() +
+                                            "|#\\b[0-9a-fA-F]{6})\\b\\]", "") + "` left from server.")
                             .build());
         });
 
