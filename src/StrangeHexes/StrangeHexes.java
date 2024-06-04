@@ -26,13 +26,12 @@ import static StrangeHexes.DiscordIntegration.*;
 public class StrangeHexes extends Plugin {
     public static long channel = 1246806416271081502L;
     public static final String[] username = {"a"};
-    public static String colors = Colors.getColors().orderedKeys().toString("|");
+    public static String colors = Colors.getColors().orderedKeys().toString("|"); // Представляет из мебя перечисление цветов для использование в regex (white|gray|...|)
     //called when game initializes
     @Override
     public void init() {
         ConfigLoader.load(); //Должен загрузится первым
         DiscordIntegration.connect();
-
         //listen for a block selection event
         Events.on(BuildSelectEvent.class, event -> {
             if (!event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer()) {
@@ -48,26 +47,16 @@ public class StrangeHexes extends Plugin {
             if (event.message.startsWith("/")) {
                 return;
             }
-            sendMessageWebhook(webhookId, "`" + event.message
-                            .replace("`", "")
-                            .replaceAll("\\[\\b(" +
-                                    colors.toLowerCase() + colors.toUpperCase() +
-                                    "|#\\b[0-9a-fA-F]{6})\\b\\]", "") + " `",
-                    event.player.name
-                            .replaceAll("\\[\\b(" +
-                                    colors.toLowerCase() + colors.toUpperCase() +
-                                    "|#\\b[0-9a-fA-F]{6})\\b\\]", ""));
+            sendMessageWebhook(webhookId, "`" + Strings.stripColors(event.message.replace("`", "")) + " `",
+                    Strings.stripColors(event.player.name.replace("`", "")));
         });
 
         Events.on(PlayerConnect.class, event -> {
             sendMessageWebhookWithEmbed(webhookId, "Server",
                     EmbedCreateSpec.builder()
                             .color(Color.GREEN)
-                            .description("`" + event.player.name
-                                    .replace("`", "")
-                                    .replaceAll("\\[\\b(" +
-                                            colors.toLowerCase() + colors.toUpperCase() +
-                                            "|#\\b[0-9a-fA-F]{6})\\b\\]", ""))
+                            .description("`" + Strings.stripColors(event.player.name.replace("`", ""))
+                                    + "` join to server.")
                             .build());
         });
 
@@ -75,11 +64,7 @@ public class StrangeHexes extends Plugin {
             sendMessageWebhookWithEmbed(webhookId, "Server",
                     EmbedCreateSpec.builder()
                             .color(Color.RUBY)
-                            .description("`" + event.player.name
-                                    .replace("`", "")
-                                    .replaceAll("\\[\\b(" +
-                                            colors.toLowerCase() + colors.toUpperCase() +
-                                            "|#\\b[0-9a-fA-F]{6})\\b\\]", "") + "` left from server.")
+                            .description("`" + Strings.stripColors(event.player.name.replace("`", "")) + "` left from server.")
                             .build());
         });
 
