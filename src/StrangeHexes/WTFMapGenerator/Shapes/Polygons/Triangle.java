@@ -9,11 +9,6 @@ import arc.struct.Seq;
 import arc.util.Log;
 import mindustry.world.Tiles;
 
-import java.awt.*;
-import java.awt.geom.Point2D;
-
-import static arc.math.Mathf.PI;
-
 public class Triangle extends Polygon {
     public final int n = 3;
     public final FloatSeq rotations = FloatSeq.with(90.0F, 210.0F, 330.0F);
@@ -29,16 +24,17 @@ public class Triangle extends Polygon {
             rotations.set(i, rotations.get(i) + rotation);
         }
 
+        Seq<Point2> points = new Seq<>();
         for (int i = 0; i < rotations.size; i++) {
             points.add(new Point2(
-                    (int) ((Mathf.cosDeg(rotations.get(i)) * (side_length / (2 * Mathf.cos(PI / n)))) + global_offset_x),
-                    (int) ((Mathf.cosDeg(rotations.get(i)) * (side_length / (2 * Mathf.sin(PI / n)))) + global_offset_x)
+                    (int) ((Mathf.cosDeg(rotations.get(i)) * (side_length / (2 * Mathf.sinDeg(180f / n)))) + global_offset_x),
+                    (int) ((Mathf.sinDeg(rotations.get(i)) * (side_length / (2 * Mathf.sinDeg(180f / n)))) + global_offset_y)
             ));
         }
-        Log.info(points);
+
         for (int i = 0; i < rotations.size; i++) {
             Drawers.drawBresenhamLine(points.get(i).x, points.get(i).y,
-                    points.get((i+1)%rotations.size).x, points.get((i+1)%rotations.size).y,
+                    points.get((i + 1) % rotations.size).x, points.get((i + 1) % rotations.size).y,
                     tiles
             );
         }

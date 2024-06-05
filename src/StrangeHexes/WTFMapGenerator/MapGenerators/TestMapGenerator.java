@@ -14,6 +14,7 @@ public class TestMapGenerator extends BaseMapGenerator implements Cons<Tiles> {
                 tiles.set(i, j, new Tile(i, j, Blocks.sand, Blocks.air, Blocks.air));
             }
         }
-        TriangleGenerator.buildClusters(tiles,10,20);
+        TriangleGenerator hex_generator = new TriangleGenerator();
+        hex_generator.buildClusters(tiles,10,10);
     }
 }

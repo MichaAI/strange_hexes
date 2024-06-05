@@ -8,7 +8,6 @@ public abstract class BaseShape {
     public float rotation;
     public float offset_x;
     public float offset_y;
-    public Seq<Point2> points = new Seq<>();
 
     protected BaseShape(float rotation, float offset_x, float offset_y) {
         this.rotation = rotation;
