@@ -1,5 +1,6 @@
 package StrangeHexes;
 
+import StrangeHexes.WTFMapGenerator.LoadHexes;
 import arc.Events;
 import arc.graphics.Colors;
 import arc.util.CommandHandler;
@@ -38,6 +39,8 @@ public class StrangeHexes extends Plugin {
     public void init() {
         ConfigLoader.load(); //Должен загрузится первым
         DiscordIntegration.connect();
+        LoadHexes.init();
+
         //listen for a block selection event
         Events.on(BuildSelectEvent.class, event -> {
             if (!event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer()) {

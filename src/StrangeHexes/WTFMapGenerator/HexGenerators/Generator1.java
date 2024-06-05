@@ -1,4 +1,4 @@
-package StrangeHexes.WTFMapGenerator.Generators;
+package StrangeHexes.WTFMapGenerator.HexGenerators;
 // uses https://upload.wikimedia.org/wikipedia/commons/9/9b/2-uniform_1.png pattern
 
 import arc.func.Cons;

@@ -1,11 +1,17 @@
 package StrangeHexes.WTFMapGenerator;
 
+import mindustry.content.Blocks;
+import mindustry.world.Block;
+import mindustry.world.Tile;
 import mindustry.world.Tiles;
 
-import static arc.math.Mathf.sign;
+public class Drawers {
+    private static int sign (int x) {
+        return (x > 0) ? 1 : (x < 0) ? -1 : 0;
+        //возвращает 0, если аргумент (x) равен нулю; -1, если x < 0 и 1, если x > 0.
+    }
 
-public class LineDraw{
-    public void drawBresenhamLine (int xstart, int ystart, int xend, int yend, Tiles tiles)
+    public static void drawBresenhamLine (int xstart, int ystart, int xend, int yend, Tiles tiles)
     /**
      * xstart, ystart - начало;
      * xend, yend - конец;
@@ -55,7 +61,7 @@ public class LineDraw{
         x = xstart;
         y = ystart;
         err = el/2;
-        //g.drawLine (x, y, x, y);//ставим первую точку
+        tiles.set(x, y, new Tile(x, y, Blocks.sand, Blocks.air, Blocks.stoneWall));//ставим первую точку
         //все последующие точки возможно надо сдвигать, поэтому первую ставим вне цикла
 
         for (int t = 0; t < el; t++)//идём по всем точкам, начиная со второй и до последней
@@ -73,8 +79,7 @@ public class LineDraw{
                 y += pdy;//цикл идёт по иксу; сдвинуть вверх или вниз, если по y
             }
 
-            //g.drawLine (x, y, x, y);
+            tiles.set(x, y, new Tile(x, y, Blocks.sand, Blocks.air, Blocks.stoneWall));
         }
     }
-
 }
