@@ -14,7 +14,7 @@ public class TriangleGenerator extends BaseClusterGenerator {
 
     public static Seq<BaseShape> shapes = Seq.with(
             new Triangle(0, 0, side_size, 0),
-            new Triangle(7.5f, -4.3f, side_size, 180)
+            //new Triangle(7.5f, -4.3f, side_size, 180)
             );
 
     @Override
