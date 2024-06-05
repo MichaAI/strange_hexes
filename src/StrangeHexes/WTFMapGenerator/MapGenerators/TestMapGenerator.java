@@ -1,5 +1,8 @@
 package StrangeHexes.WTFMapGenerator.MapGenerators;
 
+import StrangeHexes.WTFMapGenerator.HexGenerators.BaseClusterGenerator;
+import StrangeHexes.WTFMapGenerator.HexGenerators.RegularTilings.HexagonGenerator;
+import StrangeHexes.WTFMapGenerator.HexGenerators.RegularTilings.SquareGenerator;
 import StrangeHexes.WTFMapGenerator.HexGenerators.RegularTilings.TriangleGenerator;
 import arc.func.Cons;
 import mindustry.content.Blocks;
@@ -14,7 +17,7 @@ public class TestMapGenerator extends BaseMapGenerator implements Cons<Tiles> {
                 tiles.set(i, j, new Tile(i, j, Blocks.sand, Blocks.air, Blocks.air));
             }
         }
-        TriangleGenerator hex_generator = new TriangleGenerator();
+        BaseClusterGenerator hex_generator = new HexagonGenerator();
         hex_generator.buildClusters(tiles,10,10);
     }
 }
