@@ -1,7 +1,6 @@
 package StrangeHexes.WTFMapGenerator.Shapes;
 
-import arc.math.geom.Point2;
-import arc.struct.Seq;
+import StrangeHexes.WTFMapGenerator.GeneratedShape;
 import mindustry.world.Tiles;
 
 public abstract class BaseShape {
@@ -15,7 +14,7 @@ public abstract class BaseShape {
         this.offset_y = offset_y;
     }
 
-    public abstract void GenerateAndPlace(float base_offset_x, float base_offset_y, Tiles tiles);
+    public abstract GeneratedShape GenerateAndPlace(float base_offset_x, float base_offset_y, Tiles tiles);
 
 
 }

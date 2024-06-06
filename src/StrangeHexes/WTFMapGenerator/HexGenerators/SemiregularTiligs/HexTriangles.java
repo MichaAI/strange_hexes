@@ -1,20 +1,24 @@
-package StrangeHexes.WTFMapGenerator.HexGenerators.RegularTilings;
+package StrangeHexes.WTFMapGenerator.HexGenerators.SemiregularTiligs;
 
 import StrangeHexes.WTFMapGenerator.GeneratedShape;
 import StrangeHexes.WTFMapGenerator.HexGenerators.BaseClusterGenerator;
 import StrangeHexes.WTFMapGenerator.Shapes.BaseShape;
-import StrangeHexes.WTFMapGenerator.Shapes.Polygons.Square;
+import StrangeHexes.WTFMapGenerator.Shapes.Polygons.Hexagon;
+import StrangeHexes.WTFMapGenerator.Shapes.Polygons.Triangle;
+import arc.math.Mathf;
 import arc.struct.Seq;
 import mindustry.world.Tiles;
 
-public class SquareGenerator extends BaseClusterGenerator {
-    public static float x_iterator_x = 15;
-    public static float y_iterator_y = 15;
+public class HexTriangles extends BaseClusterGenerator {
     public static float side_size = 15;
+    public static float x_iterator_x = side_size / (Mathf.sinDeg(180f / 6));
+    public static float y_iterator_y = 25; //пж просто не пытайтесь понять как я получил это значение
+    public static float y_iterator_x = side_size / (2 * Mathf.sinDeg(180f / 6));
 
     public static Seq<BaseShape> shapes = Seq.with(
-            new Square(0, 0, side_size, 0)
-            //new Triangle(7.5f, -4.3f, side_size, 180)
+            new Hexagon(0, 0, side_size, 0),
+            new Triangle(side_size / (2 * Mathf.sinDeg(180f / 6)), 8.6f, side_size, 180),
+            new Triangle(side_size / (2 * Mathf.sinDeg(180f / 6)), -8.6f, side_size, 0)
     );
 
     @Override

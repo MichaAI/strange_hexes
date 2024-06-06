@@ -1,5 +1,6 @@
 package StrangeHexes.WTFMapGenerator.Shapes;
 
+import StrangeHexes.WTFMapGenerator.GeneratedShape;
 import mindustry.world.Tiles;
 
 public abstract class Polygon extends BaseShape{
@@ -12,5 +13,5 @@ public abstract class Polygon extends BaseShape{
     }
 
     @Override
-    public abstract void GenerateAndPlace(float base_offset_x, float base_offset_y, Tiles tiles);
+    public abstract GeneratedShape GenerateAndPlace(float base_offset_x, float base_offset_y, Tiles tiles);
 }

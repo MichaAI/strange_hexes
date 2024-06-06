@@ -51,7 +51,7 @@ public class StrangeHexes extends Plugin {
                 Call.sendMessage("[scarlet]ALERT![] " + player.name + " has begun building a reactor at " + event.tile.x + ", " + event.tile.y);
             }
         });
-
+        
         Events.on(PlayerChatEvent.class, event -> {
             if (event.message.startsWith("/")) {
                 return;

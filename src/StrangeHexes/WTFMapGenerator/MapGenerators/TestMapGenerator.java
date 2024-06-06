@@ -1,15 +1,14 @@
 package StrangeHexes.WTFMapGenerator.MapGenerators;
 
 import StrangeHexes.WTFMapGenerator.HexGenerators.BaseClusterGenerator;
-import StrangeHexes.WTFMapGenerator.HexGenerators.RegularTilings.HexagonGenerator;
-import StrangeHexes.WTFMapGenerator.HexGenerators.RegularTilings.SquareGenerator;
-import StrangeHexes.WTFMapGenerator.HexGenerators.RegularTilings.TriangleGenerator;
+import StrangeHexes.WTFMapGenerator.HexGenerators.SemiregularTiligs.DodecagonSquareHex;
 import arc.func.Cons;
 import mindustry.content.Blocks;
 import mindustry.world.Tile;
 import mindustry.world.Tiles;
 
 public class TestMapGenerator extends BaseMapGenerator implements Cons<Tiles> {
+    public BaseClusterGenerator generator;
     @Override
     public void get(Tiles tiles) {
         for (int i = 0; i<512; i++) {
@@ -17,7 +16,7 @@ public class TestMapGenerator extends BaseMapGenerator implements Cons<Tiles> {
                 tiles.set(i, j, new Tile(i, j, Blocks.sand, Blocks.air, Blocks.air));
             }
         }
-        BaseClusterGenerator hex_generator = new HexagonGenerator();
-        hex_generator.buildClusters(tiles,10,10);
+        generator = new DodecagonSquareHex();
+        generator.buildClusters(tiles,5,5);
     }
 }
