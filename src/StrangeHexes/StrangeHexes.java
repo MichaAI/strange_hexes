@@ -42,15 +42,7 @@ public class StrangeHexes extends Plugin {
         LoadHexes.init();
 
         //listen for a block selection event
-        Events.on(BuildSelectEvent.class, event -> {
-            if (!event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer()) {
-                //player is the unit controller
-                Player player = event.builder.getPlayer();
-
-                //send a message to everyone saying that this player has begun building a reactor
-                Call.sendMessage("[scarlet]ALERT![] " + player.name + " has begun building a reactor at " + event.tile.x + ", " + event.tile.y);
-            }
-        });
+        //кому блядь нужна защита от грифа торийкой на хексах?
 
         Events.on(PlayerChatEvent.class, event -> {
             if (event.message.startsWith("/")) {
