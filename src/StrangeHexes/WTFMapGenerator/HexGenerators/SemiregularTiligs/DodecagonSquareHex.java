@@ -12,8 +12,8 @@ import mindustry.world.Tiles;
 public class DodecagonSquareHex extends BaseClusterGenerator {
     public static float side_size = 15;
     public static float x_iterator_x = 28 * 2 + 14;
-    public static float y_iterator_y = 29 + 12 * 2 + 7.5f; //пж просто не пытайтесь понять как я получил это значение
-    public static float y_iterator_x = 28 + 7.5f;
+    public static float y_iterator_y = 29 + 12 * 2 + 7;
+    public static float y_iterator_x = 28 + 7;
 
     public static Seq<BaseShape> shapes = Seq.with(
             new Dodecagon(0, 0, side_size, 0),
