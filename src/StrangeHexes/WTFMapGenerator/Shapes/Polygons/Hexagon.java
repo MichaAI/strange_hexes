@@ -42,8 +42,7 @@ public class Hexagon extends Polygon {
 
         for (int i = 0; i < rotations.size; i++) {
             Drawers.drawBresenhamLine((int) (points.get(i).x), (int) (points.get(i).y),
-                    (int) points.get((i + 1) % rotations.size).x, (int) points.get((i + 1) % rotations.size).y,
-                    tiles
+                    (int) points.get((i + 1) % rotations.size).x, (int) points.get((i + 1) % rotations.size).y
             );
         }
 
