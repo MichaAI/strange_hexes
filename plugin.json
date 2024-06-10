@@ -1,7 +1,7 @@
 {
   "name": "StrangeHexes",
-  "author": "Anuke",
+  "author": "MichaAI",
   "main": "StrangeHexes.StrangeHexes",
-  "description": "A plugin to demonstrate some basic features.",
+  "description": "A plugin to very strange hexed gamemode",
   "version": 1.0
 }
