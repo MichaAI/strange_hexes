@@ -1,7 +1,7 @@
 package StrangeHexes.WTFMapGenerator;
 
 import StrangeHexes.WTFMapGenerator.MapGenerators.BaseMapGenerator;
-import StrangeHexes.WTFMapGenerator.MapGenerators.TestMapGenerator;
+import StrangeHexes.WTFMapGenerator.MapGenerators.TestMapGenerator2;
 import arc.util.Log;
 import mindustry.game.Rules;
 
@@ -19,8 +19,8 @@ public class LoadHexes {
 
         logic.reset();
         Log.info("Generating map...");
-        map_generator = new TestMapGenerator();
-        world.loadGenerator(512, 512, map_generator);
+        map_generator = new TestMapGenerator2();
+        world.loadGenerator(600, 600, map_generator);
         //data.initHexes(generator.getHex());
         Log.info("Map generated.");
         state.rules = rules.copy();

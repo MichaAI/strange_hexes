@@ -1,7 +1,7 @@
 package StrangeHexes.WTFMapGenerator.Shapes.Polygons;
 
-import StrangeHexes.WTFMapGenerator.Drawers;
 import StrangeHexes.WTFMapGenerator.GeneratedShape;
+import StrangeHexes.WTFMapGenerator.LoadHexes;
 import StrangeHexes.WTFMapGenerator.Shapes.Polygon;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
@@ -21,6 +21,12 @@ public class Triangle extends Polygon {
         Log.info(rotation);
     }
 
+    public Triangle(double alpha, double distance, float side_length, float rotation) {
+        super(Mathf.cosDeg((float) alpha) * (float) distance,
+                Mathf.sinDeg((float) alpha) * (float) distance,
+                side_length, rotation);
+    }
+
     @Override
     public GeneratedShape GenerateAndPlace(float global_offset_x, float global_offset_y, Tiles tiles) {
 
@@ -38,7 +44,7 @@ public class Triangle extends Polygon {
         }
 
         for (int i = 0; i < rotations.size; i++) {
-            Drawers.drawBresenhamLine((int) (points.get(i).x), (int) (points.get(i).y),
+            LoadHexes.map_generator.drawLine((int) (points.get(i).x), (int) (points.get(i).y),
                     (int) points.get((i + 1) % rotations.size).x, (int) points.get((i + 1) % rotations.size).y
             );
         }

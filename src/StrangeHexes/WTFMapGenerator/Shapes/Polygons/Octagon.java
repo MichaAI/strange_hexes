@@ -10,12 +10,18 @@ import arc.struct.Seq;
 import mindustry.game.Team;
 import mindustry.world.Tiles;
 
-public class Dodecagon extends Polygon {
-    public final int n = 12;
-    public final FloatSeq rotations = FloatSeq.with(15, 45, 75, 105, 135, 165, 195, 225, 255, 285, 315, 345);
+public class Octagon extends Polygon {
+    public final int n = 8;
+    public final FloatSeq rotations = FloatSeq.with(22.5f, 67.5f, 112.5f, 157.5f, 202.5f, 247.5f, 292.5f, 337.5f);
 
-    public Dodecagon(float offset_x, float offset_y, float side_length, float rotation) {
+    public Octagon(float offset_x, float offset_y, float side_length, float rotation) {
         super(offset_x, offset_y, side_length, rotation);
+    }
+
+    public Octagon(double alpha, double distance, float side_length, float rotation) {
+        super(Mathf.cosDeg((float) alpha) * (float) distance,
+                Mathf.sinDeg((float) alpha) * (float) distance,
+                side_length, rotation);
     }
 
     @Override

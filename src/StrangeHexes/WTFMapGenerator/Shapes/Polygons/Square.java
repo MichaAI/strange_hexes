@@ -1,7 +1,7 @@
 package StrangeHexes.WTFMapGenerator.Shapes.Polygons;
 
-import StrangeHexes.WTFMapGenerator.Drawers;
 import StrangeHexes.WTFMapGenerator.GeneratedShape;
+import StrangeHexes.WTFMapGenerator.LoadHexes;
 import StrangeHexes.WTFMapGenerator.Shapes.Polygon;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
@@ -41,7 +41,7 @@ public class Square extends Polygon {
         }
 
         for (int i = 0; i < rotations.size; i++) {
-            Drawers.drawBresenhamLine((int) (points.get(i).x), (int) (points.get(i).y),
+            LoadHexes.map_generator.drawLine((int) (points.get(i).x), (int) (points.get(i).y),
                     (int) points.get((i + 1) % rotations.size).x, (int) points.get((i + 1) % rotations.size).y
             );
         }
